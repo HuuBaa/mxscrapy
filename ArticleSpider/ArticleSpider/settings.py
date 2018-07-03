@@ -70,8 +70,8 @@ ITEM_PIPELINES = {
     'ArticleSpider.pipelines.ArtilceImagePipleline':1,
     'ArticleSpider.pipelines.MysqlTwistedPipeline':2,
 }
+#item的图片字段名字
 IMAGES_URLS_FIELD="front_image_url"
-
 import os
 projects_dir=os.path.abspath(os.path.dirname(__file__))
 IMAGES_STORE=os.path.join(projects_dir,'images')

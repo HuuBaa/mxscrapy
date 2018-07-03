@@ -57,7 +57,7 @@ class MysqlTwistedPipeline(object):
             user=settings['MYSQL_USER'],
             password=settings['MYSQL_PASSWORD'],
             charset='utf8',
-            cursorclass=MySQLdb.cursors.DictCursor,  # 插入后返回的数据为dict
+            cursorclass=MySQLdb.cursors.DictCursor,  # 插入后返回的记录为dict
             use_unicode=True
         )
         dbpool = adbapi.ConnectionPool("MySQLdb", **dbparms)
@@ -131,6 +131,7 @@ class ArtilceImagePipleline(ImagesPipeline):
         if "front_image_url" in item:
             for ok, value in results:
                 image_file_path = value['path']
+                #添加图片路径
                 item["front_image_path"] = image_file_path
         if isinstance(item, dict) or self.images_result_field in item.fields:
             item[self.images_result_field] = [x for ok, x in results if ok]
