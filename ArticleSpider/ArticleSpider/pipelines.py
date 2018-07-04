@@ -75,25 +75,8 @@ class MysqlTwistedPipeline(object):
 
     def do_insert(self, cursor, item):
         # 执行具体插入
-        insert_sql = """
-                    INSERT jobbolearticle(
-                    title,
-                    create_date,
-                    url,
-                    url_object_id,
-                    front_image_url,
-                    front_image_path,
-                    like_num,
-                    comment_num,
-                    fav_num,
-                    content,
-                    tags) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
-                """
-        cursor.execute(insert_sql,
-                       (item['title'], item['create_date'], item['url'], item['url_object_id'], item['front_image_url'][0],
-                        item['front_image_path'], item['like_num'], item['comment_num'], item['fav_num'],
-                        item['content'], item['tags'])
-                       )
+        insert_sql,params=item.get_insert_sql()
+        cursor.execute(insert_sql,params)
 
 
 class JsonWithEncodingPipeline(object):
