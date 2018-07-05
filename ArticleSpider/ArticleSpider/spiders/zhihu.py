@@ -64,8 +64,8 @@ class ZhihuSpider(scrapy.Spider):
                 answer_item['question_id'] = answer['question']['id']
                 answer_item['author_id'] ="匿名用户" if answer['author']['id'] =="0" else answer['author']['id']
                 answer_item['content'] = answer['content'] if 'content' in answer else ""
-                answer_item['update_time'] = answer['updated_time']
-                answer_item['create_time'] = answer['created_time']
+                answer_item['update_time'] = datetime.fromtimestamp(answer['updated_time']).strftime('%Y-%m-%d %H:%M:%S')
+                answer_item['create_time'] = datetime.fromtimestamp(answer['created_time']).strftime('%Y-%m-%d %H:%M:%S')
                 answer_item['comment_num'] = answer['comment_count']
                 answer_item['praise_num'] = answer['voteup_count']
                 answer_item['crawl_time'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')

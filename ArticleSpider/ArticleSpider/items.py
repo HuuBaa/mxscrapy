@@ -93,7 +93,8 @@ class JobboleArtileItem(scrapy.Item):
             self['tags']
         )
 
-        return insert_sql,params
+        return insert_sql, params
+
 
 class ZhihuQuestionItem(scrapy.Item):
     zhihu_id = scrapy.Field()
@@ -110,15 +111,15 @@ class ZhihuQuestionItem(scrapy.Item):
     def get_insert_sql(self):
         insert_sql = """ 
             INSERT INTO zhihu_question(              
-              `zhihu_id` 
-              `title` 
-              `topics` 
-              `url` 
-              `content` 
-              `comment_num` 
-              `watch_num` 
-              `view_num` 
-              `answer_num` 
+              `zhihu_id`,
+              `title`,
+              `topics`, 
+              `url`,
+              `content`, 
+              `comment_num`,
+              `watch_num`, 
+              `view_num`, 
+              `answer_num`,
               `crawl_time`
             ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             ON DUPLICATE KEY UPDATE 
@@ -127,19 +128,26 @@ class ZhihuQuestionItem(scrapy.Item):
               `watch_num`=VALUES(`watch_num`),
               `answer_num`=VALUES(`answer_num`),
               `view_num`=VALUES(`view_num`),
-              `crawl_time`=VALUES(`crawl_time`),
+              `crawl_time`=VALUES(`crawl_time`);
         """
-        zhihu_id=self['zhihu_id'][0]
 
-
-
+        zhihu_id = self['zhihu_id'][0]
+        title = self['title'][0]
+        topics = ','.join(self['topics'])
+        url = self['url'][0]
+        content = ''.join(self['content'])
+        comment_num = get_nums(self['comment_num'][0])
+        watch_num =''.join(self['watch_num'][0].split(','))
+        view_num = ''.join(self['view_num'][0].split(','))
+        answer_num = ''.join(self['answer_num'][0].split(',')) if 'answer_num' in self else 0
+        crawl_time = self['crawl_time'][0]
 
         params = (
-
+            zhihu_id,title,topics,url,content,comment_num,watch_num,view_num,answer_num,crawl_time
         )
 
-
         return insert_sql, params
+
 
 class ZhihuAnswerItem(scrapy.Item):
     zhihu_id = scrapy.Field()
@@ -152,3 +160,30 @@ class ZhihuAnswerItem(scrapy.Item):
     create_time = scrapy.Field()
     update_time = scrapy.Field()
     crawl_time = scrapy.Field()
+
+    def get_insert_sql(self):
+        insert_sql = """ 
+            INSERT INTO  zhihu_answer(
+              `zhihu_id`,
+              `question_id`,
+              `author_id`,
+              `url`,
+              `content`,
+              `comment_num`,
+              `praise_num`,
+              `create_time`,
+              `update_time`,
+              `crawl_time`
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            ON DUPLICATE KEY UPDATE 
+              `content`=VALUES (`content`),
+              `comment_num`=VALUES (`comment_num`),
+              `update_time`=VALUES (`update_time`),
+              `praise_num`=VALUES (`praise_num`),
+              `crawl_time`=VALUES (`crawl_time`)                 
+        """
+        params=(
+            self['zhihu_id'],self['question_id'],self['author_id'],self['url'],self['content'],self['comment_num'],self['praise_num'],self['create_time'],self['update_time'],self['crawl_time'],
+        )
+
+        return insert_sql, params
