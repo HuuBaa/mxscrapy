@@ -7,6 +7,7 @@ from scrapy.loader import ItemLoader
 from ..utils.zhihu_login_req import headers,cookies
 from ..items import ZhihuQuestionItem,ZhihuAnswerItem
 
+
 class ZhihuSpider(scrapy.Spider):
     name = 'zhihu'
     allowed_domains = ['www.zhihu.com']
