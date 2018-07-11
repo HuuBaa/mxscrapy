@@ -4,6 +4,9 @@ from datetime import datetime
 from scrapy.http import Request
 from urllib import parse
 from scrapy.loader import ItemLoader
+from selenium import webdriver
+from scrapy import signals
+from pydispatch import dispatcher
 
 from ..items import JobboleArtileItem,ArticleItemLoader
 from ..utils.common import get_md5
@@ -13,8 +16,18 @@ class JobboleSpider(scrapy.Spider):
     allowed_domains = ['blog.jobbole.com']
     start_urls = ['http://blog.jobbole.com/all-posts/']
 
-    def parse(self, response):
+    #selenium支持
+    # def __init__(self,**kwargs):
+    #     self.browser=webdriver.Firefox()
+    #     super(JobboleSpider,self).__init__()
+    #     dispatcher.connect(self.spider_closed,signals.spider_closed)
+    #
+    # #信号量
+    # def spider_closed(self):
+    #     print("spider close")
+    #     self.browser.quit()
 
+    def parse(self, response):
         post_nodes=response.css('div#archive .floated-thumb .post-thumb a')
         for post_node in post_nodes:
             image_url=post_node.css('img::attr(src)').extract_first("")

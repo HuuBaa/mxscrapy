@@ -7,7 +7,8 @@
 
 from scrapy import signals
 from fake_useragent import UserAgent
-
+from .tools.xici_ip import GetProxyIp
+from scrapy.http import HtmlResponse
 
 class ArticlespiderSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -118,4 +119,18 @@ class RandomUserAgentDownloaderMiddleware(object):
         def get_ua():
             return getattr(self.ua, self.ua_type)
         request.headers.setdefault('User-Agent', get_ua())
-        request.meta["proxy"]="http://221.228.17.172:8181"
+
+
+class RandomProxyIpDownloaderMiddleware(object):
+    def process_request(self, request, spider):
+        get_proxy = GetProxyIp()
+        request.meta['proxy']=get_proxy.get_proxy_ip()
+
+class SeleniumDownloaderMiddleware(object):
+    def process_request(self, request, spider):
+        if spider.name=="jobbole":
+            spider.browser.get(request.url)
+            import time
+            time.sleep(3)
+            print("selenium"+request.url)
+            return HtmlResponse(url=spider.browser.current_url,body=spider.browser.page_source,request=request,encoding="utf8")

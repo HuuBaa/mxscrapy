@@ -137,8 +137,8 @@ class ZhihuQuestionItem(scrapy.Item):
         url = self['url'][0]
         content = ''.join(self['content'])
         comment_num = get_nums(self['comment_num'][0])
-        watch_num =''.join(self['watch_num'][0].split(','))
-        view_num = ''.join(self['view_num'][0].split(','))
+        watch_num =''.join(self['watch_num'][0].split(',')) if 'watch_num' in self else 0
+        view_num = ''.join(self['view_num'][0].split(','))  if 'view_num' in self else 0
         answer_num = ''.join(self['answer_num'][0].split(',')) if 'answer_num' in self else 0
         crawl_time = self['crawl_time'][0]
 
