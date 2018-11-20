@@ -91,11 +91,15 @@ class GetProxyIp(object):
 
 
 
-# proxies = {
-#   'http': 'http://18.222.19.249:3128',
-# }
-#
-# res=requests.get("http://icanhazip.com/", proxies=proxies)
+ip=GetProxyIp().get_proxy_ip()
+
+proxies = {
+      'https': ip,
+    }
+res=requests.get("https://5iittt.bid/intr/ff7e4a4131a739b3", proxies=proxies)
+print(res)
+
+
 
 
 def get_ip_json_list():
@@ -134,3 +138,5 @@ def dict_2_mysql(ip_dicts):
 #获取新ip时使用
 # get_ip_json_list()
 # dict_2_mysql(json_2_dict())
+
+
